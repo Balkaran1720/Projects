@@ -17,7 +17,7 @@ window.onload = function () {
 
     if (h < 10) {
       h = "0" + h;
-    } else {
+    } else{
       h = h;
     }
     if (m < 10) {

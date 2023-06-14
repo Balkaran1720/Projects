@@ -1,0 +1,45 @@
+- Overview
+    - Battleship is a two player game
+    - The goal of the game is to setup the board with a few ships of various sizes on the boards
+
+    - Ship Placement Board
+        - Ship Placement Board is a view for the player to see the locations of their ships and where
+         the enemy has hit their bombs
+
+        - Example for a board that is 5x5, and with two ships, 1x2, 1x4 from player 1
+        - In this examples where Player 1 has placed their ships
+        - We also see locations where player 2 has dropped their bombs
+        - Notice how part of ship 2 has been bombed
+            - * * * 1 1
+            - * B * * 2
+            - * * * * 2
+            - * * * * 2
+            - * * * * 2B
+        - Example for a board that is 5x5, and with two ships, 1x2, 1x4 from player 2
+            - * * * * *
+            - * 1 1B * *
+            - * * * * *
+            - * * * * *
+            - 2 2 2 2 B
+
+    - Counter Battery Map Board
+        - Counter Battery Map Board is a video for the player to mark and track loctions of 
+        where they have already dropped bombs
+        - Here Player 1 has marked the location where the bomb they dropped, and where it hit. 
+        This lets player 1 know where to drop the bombs next
+        - * * * * *
+        - * * H * *
+        - * * * * *
+        - * * * * *
+        - * * * * M
+
+        - Player 2 example board
+        - * * * * *
+        - * M * * *
+        - * * * * *
+        - * * * * *
+        - * * * * H
+
+    - Battleship is a two player game, where both players are non AI
+
+

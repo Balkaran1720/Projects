@@ -34,6 +34,7 @@ for (let row = 0; row < boardSize; row++) {
   }
 }
 
+
 function isSelected(position) {
   return selectedGrid.includes(position);
 }

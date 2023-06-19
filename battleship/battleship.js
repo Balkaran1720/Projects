@@ -38,3 +38,10 @@ for (let row = 0; row < boardSize; row++) {
 function isSelected(position) {
   return selectedGrid.includes(position);
 }
+
+function validate() {
+  for (let i = 0; i < shipSizeArray.length; i++) {
+    checkIfShipWithSizeExists(shipSizeArray[i]);
+  }
+}
+

@@ -1,8 +1,8 @@
 let boardSize;
 let number;
-let shipSizeArray = [3, 2];
-let selectedGrid =[];
-let userClicked = 0;
+let shipSizeArray = [3, 2, 5];
+const shipBoard = [];
+
 let body = document.getElementsByTagName("body")[0];
 
 do {
@@ -21,27 +21,15 @@ for (let row = 0; row < boardSize; row++) {
 
     divColumn.addEventListener("click", function () {
       const position = row * boardSize + column;
-
-      for (let i = 0; i < shipSizeArray.length; i++) {
-        if (!isSelected(position) && userClicked[i] < shipSizeArray[i]) {
-          divColumn.style.backgroundColor = "red";
-          console.log("grid", position, "clicked");
-          userClicked++;
-          selectedGrid.push(position);
-        }
-      }
+      divColumn.style.backgroundColor = "red";
+      console.log("grid", position, "clicked");
     });
+    shipBoard.push(divColumn);
   }
 }
 
-
-function isSelected(position) {
-  return selectedGrid.includes(position);
-}
-
-function validate() {
-  for (let i = 0; i < shipSizeArray.length; i++) {
-    checkIfShipWithSizeExists(shipSizeArray[i]);
-  }
-}
-
+// function validate() {
+//   for (let i = 0; i < shipSizeArray.length; i++) {
+//     checkIfShipWithSizeExists(shipSizeArray[i]);
+//   }
+// }

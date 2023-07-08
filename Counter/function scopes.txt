@@ -1,0 +1,53 @@
+// Global Scope:
+// The global scope refers to the outermost scope of a JavaScript program or script.
+// Variables and functions declared in the global scope are accessible throughout the entire program.
+// Global scope
+const globalVariable = "I'm a global variable";
+
+function globalFunction() {
+  console.log("I'm a global function");
+}
+
+console.log(globalVariable); // Output: I'm a global variable
+globalFunction(); // Output: I'm a global function
+
+// Function Scope:
+// Function scope refers to variables and functions that are defined within a function.
+// Variables declared inside a function are accessible only within that function, and they are not visible outside of it.
+function greet() {
+  const message = "Hello"; // Function scope
+
+  console.log(message); // Output: Hello
+}
+
+greet();
+console.log(message); // Error: message is not defined (outside function scope)
+
+// Block Scope (Introduced in ECMAScript 6):
+// Block scope refers to variables declared within a block statement, such as if, for, while, or switch. 
+// Variables declared with let or const inside a block are limited to that block and are not accessible outside of it.
+
+if (true) {
+  const blockVariable = "I'm inside a block"; // Block scope
+
+  console.log(blockVariable); // Output: I'm inside a block
+}
+
+console.log(blockVariable); // Error: blockVariable is not defined (outside block scope)
+
+// Lexical Scope (Closure):
+// Lexical scope refers to the ability of an inner function to access variables and functions defined in its outer function.
+// The inner function can access variables and functions in the scope where it was defined, even if the outer function has 
+// finished executing
+
+function outerFunction() {
+  const outerVariable = "I'm in the outer function"; // Outer scope
+
+  function innerFunction() {
+    console.log(outerVariable); // Access outerVariable from outer scope
+  }
+
+  innerFunction();
+}
+
+outerFunction(); // Output: I'm in the outer function

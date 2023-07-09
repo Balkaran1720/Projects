@@ -52,10 +52,6 @@ class GirdNode {
   }
 }
 
-/**
- * Explain this class:
- * Explain this constructor:
- */
 class BattleshipShipScreen {
   constructor(boardSize, shipSizeArr, shipColorArr) {
     this.boardSize = boardSize;
@@ -66,16 +62,9 @@ class BattleshipShipScreen {
      * @type {Ship[]}
      */
     this.shipArr = [];
-    //can u explain this again
   }
-
-  /**
-   * Explain this function:
-   */
   createGird() {
     let body = document.getElementsByTagName("body")[0];
-    
-
     console.log(`${this.constructor.name}: createGird`);
 
     for (let row = 0; row < this.boardSize; row++) {
@@ -98,7 +87,6 @@ class BattleshipShipScreen {
 
       this.shipBoardArr.push(shipGirdRow);
       body.appendChild(divRow);
-      //explain here
     }
 
     for (let i = 0; i < this.shipSizeArr.length; i++) {
@@ -130,14 +118,6 @@ class BattleshipShipScreen {
   }
 }
 
-/**
- * TODO:
- *  - Search how to add an input box on the screen and capture the board size.
- *  - Learn class, attributes, function, constructor
- *  - Learn 1D, 2D arrays
- *  - Learn Object oriented programming
- */
-
 function initilize() {
   console.log("====Battleship====");
   let _boardSize = 10;
@@ -152,29 +132,4 @@ function initilize() {
 }
 
 initilize();
-// function captureBoardSize() {
-//   let input = document.createElement("input");
-//   input.type = "text";
-//   input.placeholder = "Enter board size";
 
-//   let button = document.createElement("button");
-//   button.textContent = "Submit";  // Set the text content of the button
-//   button.addEventListener("click", function() {
-//     let boardSizeInput = document.getElementsByTagName("input")[0];
-//     let _boardSize = parseInt(boardSizeInput.value);
-
-//     if (isNaN(_boardSize)) {
-//       alert("Please enter a valid board size!");
-//       return;
-//     }
-
-//     console.log("Board size:", _boardSize);
-//   });
-
-//   // Append the input and button to the document body
-//   document.body.appendChild(input);
-//   document.body.appendChild(button);
-// }
-
-// // Call the captureBoardSize function to create the input box and capture the board size
-// captureBoardSize();

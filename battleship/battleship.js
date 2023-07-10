@@ -65,7 +65,6 @@ class BattleshipShipScreen {
      * @type {Ship[]}
      */
     this.shipArr = [];
-    //can u explain this again
   }
 
   //Creating grids to make row and coloumns

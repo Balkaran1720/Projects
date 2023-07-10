@@ -6,7 +6,7 @@ class Ship {
   }
 
   isCompleted() {
-    return this.girdArr.length === this.shipSize;  
+    return this.girdArr.length === this.shipSize;
   }
 
   /**
@@ -53,18 +53,25 @@ class GirdNode {
 }
 
 class BattleshipShipScreen {
-  constructor(boardSize, shipSizeArr, shipColorArr) {
+  constructor(boardSize, shipSizeArr, shipColorArr, numPlayers) {
     this.boardSize = boardSize;
     this.shipSizeArr = shipSizeArr;
     this.shipColorArr = shipColorArr;
     this.shipBoardArr = [];
+    this.numPlayers = numPlayers;
+    this.currentPlayer = 1;
+    this.playerOneFinished = false;
     /**
      * @type {Ship[]}
      */
     this.shipArr = [];
+    //can u explain this again
   }
+
+  //Creating grids to make row and coloumns
   createGird() {
     let body = document.getElementsByTagName("body")[0];
+
     console.log(`${this.constructor.name}: createGird`);
 
     for (let row = 0; row < this.boardSize; row++) {
@@ -94,7 +101,7 @@ class BattleshipShipScreen {
     }
     console.log(`${this.constructor.name}: shipBoardArr`, this.shipBoardArr);
   }
-
+//Checking where user is clicking 
   userClickedGird(row, col) {
     const gird = this.shipBoardArr[row][col];
     console.log(`User Clicked: Row: ${row}, Col:${col}, Gird:`, gird);
@@ -102,34 +109,41 @@ class BattleshipShipScreen {
     const currentShipNotCompleted = this.shipArr.find((ship) => {
       return ship.isCompleted() === false;
     });
-
-    if (currentShipNotCompleted !== undefined) {
-      if (currentShipNotCompleted.validateAddGird(gird)) {
-        currentShipNotCompleted.addGird(gird);
-        if (currentShipNotCompleted.isCompleted()) {
-          alert(
-            `Ship: ${currentShipNotCompleted.shipSize}, Color: ${currentShipNotCompleted.color} is completed.`,
-          );
+    if (this.currentPlayer === 1 && !this.player1Finished) {
+      if (currentShipNotCompleted !== undefined) {
+        if (currentShipNotCompleted.validateAddGird(gird)) {
+          currentShipNotCompleted.addGird(gird);
+          if (currentShipNotCompleted.isCompleted()) {
+            alert(
+              `Ship: ${currentShipNotCompleted.shipSize}, Color: ${currentShipNotCompleted.color} is completed.`,
+            );
+            const allShipsPlaced = this.shipArr.every((ship) => ship.isCompleted())
+            if(allShipsPlaced){
+              this.playerOneFinished = true;
+              alert("Player one has finished placing their ships")
+            }
+          }
         }
       } else {
         alert(`Invalid Gird.`);
       }
     }
-  }
+    this.currentPlayer = this.currentPlayer % this.numPlayers + 1;
 }
-
+}
+//Making a initilize function
 function initilize() {
   console.log("====Battleship====");
   let _boardSize = 10;
+  const _numPlayers = 2;
   const _shipSizeArr = [3, 4, 7, 7, 1];
   const _shipColor = ["red", "green", "blue", "magenta", "orange"];
   console.log(`Board Size: ${_boardSize}, Ships: ${_shipSizeArr.join(",")}`);
 
   console.log("Initilizing the screen.");
-  const shipScreen = new BattleshipShipScreen(_boardSize, _shipSizeArr, _shipColor);
+  const shipScreen = new BattleshipShipScreen(_boardSize, _shipSizeArr, _shipColor, _numPlayers);
   shipScreen.createGird();
   console.log(`Ship Screen:`, shipScreen);
 }
 
 initilize();
-

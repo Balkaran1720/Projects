@@ -100,6 +100,26 @@ class BattleshipShipScreen {
     }
     console.log(`${this.constructor.name}: shipBoardArr`, this.shipBoardArr);
   }
+
+  resetGird(){
+    //clear the grid
+    for(let row=0;row <this.boardSize; row++){
+      for(let col = 0 ; col < this.boardSize;col++){
+        const gird = this.shipBoardArr[row][col];
+        gird.divColumn.style.backgroundColor = ""; // reset background color if any
+        gird.setShip(undefined); // clear ships reference
+      }
+    }
+    //reset variables
+    this.currentPlayer = 1;
+    this.playerOneFinished = false;
+
+    //reset ships
+    for( const ship of this.shipArr){
+      ship.girdArr = []; // Clear ships grid array
+    }
+  }
+
 //Checking where user is clicking 
   userClickedGird(row, col) {
     const gird = this.shipBoardArr[row][col];
@@ -120,6 +140,7 @@ class BattleshipShipScreen {
             if(allShipsPlaced){
               this.playerOneFinished = true;
               alert("Player one has finished placing their ships")
+              this.resetGird(); //reset the grid for Player 2
             }
           }
         }

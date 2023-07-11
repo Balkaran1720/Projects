@@ -33,6 +33,10 @@ class Ship {
     //More Validations
     return true;
   }
+  addShipPosition(shipPositions) {
+    const positions = this.girdArr.map((gird) => ({ row: gird.row, col: gird.col }));
+    this.shipPositions.push(positions);
+  }
 }
 
 class GirdNode {
@@ -61,6 +65,7 @@ class BattleshipShipScreen {
     this.numPlayers = numPlayers;
     this.currentPlayer = 1;
     this.playerOneFinished = false;
+    this.shipPositions = [];
     /**
      * @type {Ship[]}
      */
@@ -118,6 +123,7 @@ class BattleshipShipScreen {
     for( const ship of this.shipArr){
       ship.girdArr = []; // Clear ships grid array
     }
+    this.shipPositions = [];
   }
 
 //Checking where user is clicking 
@@ -128,7 +134,7 @@ class BattleshipShipScreen {
     const currentShipNotCompleted = this.shipArr.find((ship) => {
       return ship.isCompleted() === false;
     });
-    if (this.currentPlayer === 1 && !this.player1Finished) {
+    if (this.currentPlayer === 1 && !this.playerOneFinished) {
       if (currentShipNotCompleted !== undefined) {
         if (currentShipNotCompleted.validateAddGird(gird)) {
           currentShipNotCompleted.addGird(gird);
@@ -136,6 +142,7 @@ class BattleshipShipScreen {
             alert(
               `Ship: ${currentShipNotCompleted.shipSize}, Color: ${currentShipNotCompleted.color} is completed.`,
             );
+            this.addShipPosition(currentShipNotCompleted);
             const allShipsPlaced = this.shipArr.every((ship) => ship.isCompleted())
             if(allShipsPlaced){
               this.playerOneFinished = true;
@@ -156,7 +163,7 @@ function initilize() {
   console.log("====Battleship====");
   let _boardSize = 10;
   const _numPlayers = 2;
-  const _shipSizeArr = [3, 4, 7, 7, 1];
+  const _shipSizeArr = [3, 4, 1];
   const _shipColor = ["red", "green", "blue", "magenta", "orange"];
   console.log(`Board Size: ${_boardSize}, Ships: ${_shipSizeArr.join(",")}`);
 

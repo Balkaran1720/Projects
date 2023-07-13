@@ -20,6 +20,11 @@ class Ship {
     gird.setShip(this);
   }
 
+  addShipPositions(shipPositions) {
+    const positions = shipPositions.girdArr.map((gird) => ({ row: gird.row, col: gird.col }));
+    shipPositions.push(positions);
+  }
+
   /**
    *
    * @param {GirdNode} gird
@@ -32,10 +37,6 @@ class Ship {
 
     //More Validations
     return true;
-  }
-  addShipPosition(shipPositions) {
-    const positions = this.girdArr.map((gird) => ({ row: gird.row, col: gird.col }));
-    this.shipPositions.push(positions);
   }
 }
 
@@ -106,27 +107,7 @@ class BattleshipShipScreen {
     console.log(`${this.constructor.name}: shipBoardArr`, this.shipBoardArr);
   }
 
-  resetGird(){
-    //clear the grid
-    for(let row=0;row <this.boardSize; row++){
-      for(let col = 0 ; col < this.boardSize;col++){
-        const gird = this.shipBoardArr[row][col];
-        gird.divColumn.style.backgroundColor = ""; // reset background color if any
-        gird.setShip(undefined); // clear ships reference
-      }
-    }
-    //reset variables
-    this.currentPlayer = 1;
-    this.playerOneFinished = false;
-
-    //reset ships
-    for( const ship of this.shipArr){
-      ship.girdArr = []; // Clear ships grid array
-    }
-    this.shipPositions = [];
-  }
-
-//Checking where user is clicking 
+  //Checking where user is clicking
   userClickedGird(row, col) {
     const gird = this.shipBoardArr[row][col];
     console.log(`User Clicked: Row: ${row}, Col:${col}, Gird:`, gird);
@@ -140,35 +121,80 @@ class BattleshipShipScreen {
           currentShipNotCompleted.addGird(gird);
           if (currentShipNotCompleted.isCompleted()) {
             alert(
-              `Ship: ${currentShipNotCompleted.shipSize}, Color: ${currentShipNotCompleted.color} is completed.`,
+              `Ship size of : ${currentShipNotCompleted.shipSize} , And color: ${currentShipNotCompleted.color} is completed.`,
             );
-            this.addShipPosition(currentShipNotCompleted);
-            const allShipsPlaced = this.shipArr.every((ship) => ship.isCompleted())
-            if(allShipsPlaced){
+            // this.addShipPositions(currentShipNotCompleted.shipPositions);
+            const allShipsPlaced = this.shipArr.every((ship) => ship.isCompleted());
+            if (allShipsPlaced) {
               this.playerOneFinished = true;
-              alert("Player one has finished placing their ships")
+              alert("Player One has finished placing their ships");
               this.resetGird(); //reset the grid for Player 2
+              this.currentPlayer = 2;
             }
           }
         }
-      } else {
-        alert(`Invalid Gird.`);
+      }
+    } else if (currentShipNotCompleted !== undefined) {
+      if (currentShipNotCompleted.validateAddGird(gird)) {
+        currentShipNotCompleted.addGird(gird);
+        if (currentShipNotCompleted.isCompleted()) {
+          alert(
+            `Ship size of : ${currentShipNotCompleted.shipSize} , And color: ${currentShipNotCompleted.color} is completed.`,
+          );
+
+          const allShipsPlaced = this.shipArr.every((ship) => ship.isCompleted());
+          if (allShipsPlaced) {
+            alert("Player Two has finished placing their ships");
+          } else {
+            alert(`Invalid Gird.`);
+          }
+        }
       }
     }
-    this.currentPlayer = this.currentPlayer % this.numPlayers + 1;
-}
+    this.currentPlayer = (this.currentPlayer % this.numPlayers) + 1;
+  }
+  resetGird() {
+    //clear the grid
+    for (let row = 0; row < this.boardSize; row++) {
+      for (let col = 0; col < this.boardSize; col++) {
+        const gird = this.shipBoardArr[row][col];
+        gird.divColumn.style.backgroundColor = ""; // reset background color if any
+        gird.setShip(undefined); // clear ships reference
+      }
+    }
+    //reset variables
+    this.currentPlayer = 1;
+    this.playerOneFinished = false;
+
+    //reset ships
+    for (const ship of this.shipArr) {
+      ship.girdArr = []; // Clear ships grid array
+    }
+    this.shipPositions = [];
+  }
 }
 //Making a initilize function
 function initilize() {
   console.log("====Battleship====");
   let _boardSize = 10;
   const _numPlayers = 2;
-  const _shipSizeArr = [3, 4, 1];
-  const _shipColor = ["red", "green", "blue", "magenta", "orange"];
-  console.log(`Board Size: ${_boardSize}, Ships: ${_shipSizeArr.join(",")}`);
+  const _shipSizeArr1 = [3, 4, 5, 3, 1];
+  const _shipColor1 = ["red", "green", "blue", "magenta", "orange"];
+  console.log(`Board Size: ${_boardSize}, Ships: ${_shipSizeArr1.join(",")}`);
+  const _shipSizeArr2 = [4, 2, 1, 7, 4];
+  const _shipColor2 = ["skyblue", "yellow", "magenta", "orange", "blue"];
+  console.log(`Board Size: ${_boardSize}, Ships: ${_shipSizeArr2.join(",")}`);
+  
 
   console.log("Initilizing the screen.");
-  const shipScreen = new BattleshipShipScreen(_boardSize, _shipSizeArr, _shipColor, _numPlayers);
+  const shipScreen = new BattleshipShipScreen(
+    _boardSize,
+    _shipSizeArr1,
+    _shipColor1,
+    _numPlayers,
+    _shipSizeArr2,
+    _shipColor2,
+  );
   shipScreen.createGird();
   console.log(`Ship Screen:`, shipScreen);
 }

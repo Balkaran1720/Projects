@@ -21,9 +21,9 @@ class Ship {
   }
 
   addShipPositions(shipPositions) {
-    const positions = shipPositions.girdArr.map((gird) => ({ row: gird.row, col: gird.col }));
-    shipPositions.push(positions);
+    this.shipPositions = shipPositions.map((gird) => ({ row: gird.row, col: gird.col }));
   }
+  
 
   /**
    *
@@ -58,10 +58,12 @@ class GirdNode {
 }
 
 class BattleshipShipScreen {
-  constructor(boardSize, shipSizeArr, shipColorArr, numPlayers) {
+  constructor(boardSize, shipSizeArrPlayer1, shipColorArrPlayer1, shipSizeArrPlayer2, shipColorArrPlayer2, numPlayers) {
     this.boardSize = boardSize;
-    this.shipSizeArr = shipSizeArr;
-    this.shipColorArr = shipColorArr;
+    this.shipSizeArrPlayer1 = shipSizeArrPlayer1;
+    this.shipColorArrPlayer1 = shipColorArrPlayer1;
+    this.shipSizeArrPlayer2 = shipSizeArrPlayer2;
+    this.shipColorArrPlayer2 = shipColorArrPlayer2;
     this.shipBoardArr = [];
     this.numPlayers = numPlayers;
     this.currentPlayer = 1;
@@ -71,6 +73,8 @@ class BattleshipShipScreen {
      * @type {Ship[]}
      */
     this.shipArr = [];
+    this.shipArrPlayer1 = [];
+    this.shipArrPlayer2 = [];
   }
 
   //Creating grids to make row and coloumns
@@ -100,12 +104,23 @@ class BattleshipShipScreen {
       this.shipBoardArr.push(shipGirdRow);
       body.appendChild(divRow);
     }
-
-    for (let i = 0; i < this.shipSizeArr.length; i++) {
-      this.shipArr.push(new Ship(this.shipSizeArr[i], this.shipColorArr[i]));
+    //Create ships for player 1
+    for (let i = 0; i < this.shipSizeArrPlayer1.length; i++) {
+      this.shipArrPlayer1.push(new Ship(this.shipSizeArrPlayer1[i], this.shipColorArrPlayer1[i]));
     }
-    console.log(`${this.constructor.name}: shipBoardArr`, this.shipBoardArr);
+    //create ships for player 2
+    for (let i = 0; i < this.shipSizeArrPlayer2.length; i++) {
+      this.shipArrPlayer2.push(new Ship(this.shipSizeArrPlayer2[i], this.shipColorArrPlayer2[i]));
+    }
+    console.log(`${this.constructor.name}: shipArrPlayer1`, this.shipArrPlayer1);
+    console.log(`${this.constructor.name}: shipArrPlayer2`, this.shipArrPlayer2);
   }
+
+  //   for (let i = 0; i < this.shipSizeArr.length; i++) {
+  //     this.shipArr.push(new Ship(this.shipSizeArr[i], this.shipColorArr[i]));
+  //   }
+  //   console.log(`${this.constructor.name}: shipBoardArr`, this.shipBoardArr);
+  // }
 
   //Checking where user is clicking
   userClickedGird(row, col) {
@@ -123,7 +138,7 @@ class BattleshipShipScreen {
             alert(
               `Ship size of : ${currentShipNotCompleted.shipSize} , And color: ${currentShipNotCompleted.color} is completed.`,
             );
-            // this.addShipPositions(currentShipNotCompleted.shipPositions);
+            this.addShipPositions(currentShipNotCompleted.shipPositions);
             const allShipsPlaced = this.shipArr.every((ship) => ship.isCompleted());
             if (allShipsPlaced) {
               this.playerOneFinished = true;
@@ -180,21 +195,21 @@ function initilize() {
   let _boardSize = 10;
   const _numPlayers = 2;
   //Player 1 Ships
-  const _shipSizeArr1 = [3, 4, 5, 3, 1];
-  const _shipColor1 = ["red", "green", "blue", "magenta", "orange"];
-  console.log(`Board Size: ${_boardSize}, Ships: ${_shipSizeArr1.join(",")}`);
+  const _shipSizeArrPlayer1 = [3, 4, 5, 3, 1];
+  const _shipColorArrPlayer1 = ["red", "green", "blue", "magenta", "orange"];
+  console.log(`Board Size: ${_boardSize}, Ships: ${_shipSizeArrPlayer1.join(",")}`);
   //Player 2 Ships
-  const _shipSizeArr2 = [4, 2, 1, 7, 4];
-  const _shipColor2 = ["skyblue", "yellow", "magenta", "orange", "blue"];
-  console.log(`Board Size: ${_boardSize}, Ships: ${_shipSizeArr2.join(",")}`);
+  const _shipSizeArrPlayer2 = [4, 2, 1, 7, 4];
+  const _shipColorArrPlayer2 = ["skyblue", "yellow", "magenta", "orange", "blue"];
+  console.log(`Board Size: ${_boardSize}, Ships: ${_shipSizeArrPlayer2.join(",")}`);
 
   console.log("Initilizing the screen.");
   const shipScreen = new BattleshipShipScreen(
     _boardSize,
-    _shipSizeArr1,
-    _shipColor1,
-    _shipSizeArr2,
-    _shipColor2,
+    _shipSizeArrPlayer1,
+    _shipColorArrPlayer1,
+    _shipSizeArrPlayer2,
+    _shipColorArrPlayer2,
     _numPlayers,
   );
   shipScreen.createGird();
@@ -202,4 +217,3 @@ function initilize() {
 }
 
 initilize();
-

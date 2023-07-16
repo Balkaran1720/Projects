@@ -20,11 +20,10 @@ class Ship {
     gird.setShip(this);
   }
 
-  addShipPositions(shipPositions) {
-    this.shipPositions = shipPositions.map((gird) => ({ row: gird.row, col: gird.col }));
-  }
+  // addShipPositions(shipPositions) {
+  //   this.shipPositions = shipPositions.map((gird) => ({ row: gird.row, col: gird.col }));
+  // }
   
-
   /**
    *
    * @param {GirdNode} gird
@@ -58,6 +57,7 @@ class GirdNode {
 }
 
 class BattleshipShipScreen {
+
   constructor(boardSize, shipSizeArrPlayer1, shipColorArrPlayer1, shipSizeArrPlayer2, shipColorArrPlayer2, numPlayers) {
     this.boardSize = boardSize;
     this.shipSizeArrPlayer1 = shipSizeArrPlayer1;
@@ -66,14 +66,18 @@ class BattleshipShipScreen {
     this.shipColorArrPlayer2 = shipColorArrPlayer2;
     this.shipBoardArr = [];
     this.numPlayers = numPlayers;
-    this.currentPlayer = 1;
-    this.playerOneFinished = false;
+
+    //1 = Player 1 is placing, 2 = Player 2 is placing, -1 = both are done placing
+    this.currentPlayerPlacing = 1;
     this.shipPositions = [];
+
     /**
      * @type {Ship[]}
      */
-    this.shipArr = [];
     this.shipArrPlayer1 = [];
+    /**
+     * @type {Ship[]}
+     */
     this.shipArrPlayer2 = [];
   }
 
@@ -114,63 +118,72 @@ class BattleshipShipScreen {
     }
     console.log(`${this.constructor.name}: shipArrPlayer1`, this.shipArrPlayer1);
     console.log(`${this.constructor.name}: shipArrPlayer2`, this.shipArrPlayer2);
-  }
 
-  //   for (let i = 0; i < this.shipSizeArr.length; i++) {
-  //     this.shipArr.push(new Ship(this.shipSizeArr[i], this.shipColorArr[i]));
-  //   }
-  //   console.log(`${this.constructor.name}: shipBoardArr`, this.shipBoardArr);
-  // }
+    alert(`Player ${this.currentPlayerPlacing} will start placing ships.`);
+  }
 
   //Checking where user is clicking
   userClickedGird(row, col) {
     const gird = this.shipBoardArr[row][col];
     console.log(`User Clicked: Row: ${row}, Col:${col}, Gird:`, gird);
 
-    const currentShipNotCompleted = this.shipArr.find((ship) => {
+    //Find the ship array that we need to placing
+    const shipArr = this.currentPlayerPlacing === 1 
+      ? this.shipArrPlayer1 
+      : this.currentPlayerPlacing === 2 
+        ? this.shipArrPlayer2
+        : undefined;
+    
+    //if ship array is undefined then both players are done
+    const bothPlayersFinished = shipArr === undefined;
+
+    //if both players are finished then just let the user know they can't place anymore ships
+    if(bothPlayersFinished) {
+      alert("Both Players are done placing ships");
+      return;
+    }
+
+    //Find a ship that has not been completed
+    const foundShipNotCompleted = shipArr.find((ship) => {
       return ship.isCompleted() === false;
     });
-    if (this.currentPlayer === 1 && !this.playerOneFinished) {
-      if (currentShipNotCompleted !== undefined) {
-        if (currentShipNotCompleted.validateAddGird(gird)) {
-          currentShipNotCompleted.addGird(gird);
-          if (currentShipNotCompleted.isCompleted()) {
-            alert(
-              `Ship size of : ${currentShipNotCompleted.shipSize} , And color: ${currentShipNotCompleted.color} is completed.`,
-            );
-            this.addShipPositions(currentShipNotCompleted.shipPositions);
-            const allShipsPlaced = this.shipArr.every((ship) => ship.isCompleted());
-            if (allShipsPlaced) {
-              this.playerOneFinished = true;
-              alert("Player One has finished placing their ships");
-              this.resetGird(); //reset the grid for Player 2
-              this.currentPlayer = 2;
-              alert("Player Two Turn");
-            }
-          }
-        }
-      }
-    } else if (this.currentPlayer === 2 && this.playerOneFinished) {
-      if (currentShipNotCompleted !== undefined)
-        if (currentShipNotCompleted.validateAddGird(gird)) {
-          currentShipNotCompleted.addGird(gird);
-          if (currentShipNotCompleted.isCompleted()) {
-            alert(
-              `Ship size of : ${currentShipNotCompleted.shipSize} , And color: ${currentShipNotCompleted.color} is completed.`,
-            );
-            const allShipsPlaced = this.shipArr.every((ship) => ship.isCompleted());
-            if (allShipsPlaced) {
-              alert("Player Two has finished placing their ships");
-            } else {
-              alert(`Invalid Gird.`);
-            }
-          }
-        }
+
+    //if no ship is found then everything is placed
+    if (foundShipNotCompleted === undefined) return;
+
+    //if this is not a valid grid, don't do anything
+    if (!foundShipNotCompleted.validateAddGird(gird))  return;
+
+    //this is a valid grid then place the ship
+    foundShipNotCompleted.addGird(gird);
+
+    //if the current found ship is not completed then return
+    if (!foundShipNotCompleted.isCompleted()) return;
+
+    alert(`Ship size of : ${foundShipNotCompleted.shipSize} , And color: ${foundShipNotCompleted.color}`);
+    
+    //are all ships completed?
+    const allShipsPlaced = shipArr.every((ship) => ship.isCompleted());
+
+    //if all ships are not completed, don't do anything
+    if(!allShipsPlaced) return;
+    
+
+    alert(`Player ${this.currentPlayerPlacing} has finished placing their ships`);
+
+    if(this.currentPlayerPlacing === 1) {
+      this.currentPlayerPlacing = 2;
     }
-    // this.currentPlayer = (this.currentPlayer % this.numPlayers) + 1;
+    else if(this.currentPlayerPlacing === 2) {
+      this.currentPlayerPlacing = -1;
+      alert(`Both players compeleted.`);
+      console.log(`Current Board State:`,this);
+    }
+   
+    this.resetColors();
   }
-  resetGird() {
-    //clear the grid
+
+  resetColors() {
     for (let row = 0; row < this.boardSize; row++) {
       for (let col = 0; col < this.boardSize; col++) {
         const gird = this.shipBoardArr[row][col];
@@ -178,17 +191,10 @@ class BattleshipShipScreen {
         gird.setShip(undefined); // clear ships reference
       }
     }
-    //reset variables
-    this.currentPlayer = 1;
-    this.playerOneFinished = false;
-
-    //reset ships
-    for (const ship of this.shipArr) {
-      ship.girdArr = []; // Clear ships grid array
-    }
-    this.shipPositions = [];
   }
+
 }
+
 //Making a initilize function
 function initilize() {
   console.log("====Battleship====");

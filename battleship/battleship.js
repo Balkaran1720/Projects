@@ -3,7 +3,7 @@ class Ship {
     this.girdArr = [];
     this.color = color;
     this.shipSize = shipSize;
-  }
+ }
 
   isCompleted() {
     return this.girdArr.length === this.shipSize;

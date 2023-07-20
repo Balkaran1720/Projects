@@ -13,7 +13,7 @@ class Ship {
    *
    * @param {GirdNode} gird
    */
-
+  
   addGird(gird) {
     this.girdArr.push(gird);
     gird.divColumn.style.backgroundColor = this.color;
@@ -34,7 +34,7 @@ class Ship {
     if (this.isCompleted()) return false;
     if (gird.isOccupied()) return false;
 
-    //More Validations
+     //More Validations
     return true;
   }
 }
